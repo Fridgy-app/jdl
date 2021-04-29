@@ -135,5 +135,5 @@ deployment {
   appsFolders [gateway, products, groceries, recipes]
   dockerRepositoryName "fridgy"
   kubernetesNamespace fridgy
-  monitoring prometheus
+  // monitoring prometheus
 }
