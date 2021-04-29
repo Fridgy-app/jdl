@@ -47,7 +47,7 @@ application {
     prodDatabaseType postgresql
     cacheProvider hazelcast
     buildTool gradle
-    serverPort 8081
+    serverPort 8082
     skipUserManagement true
   }
   entities Product, ProductCategory, ProductUnit
@@ -63,7 +63,7 @@ application {
     prodDatabaseType postgresql
     cacheProvider hazelcast
     buildTool gradle
-    serverPort 8081
+    serverPort 8083
     skipUserManagement true
   }
   entities GroceryItem
@@ -79,7 +79,7 @@ application {
     prodDatabaseType postgresql
     cacheProvider hazelcast
     buildTool gradle
-    serverPort 8081
+    serverPort 8084
     skipUserManagement true
   }
   entities Recipe, RecipeIngredient
@@ -126,12 +126,14 @@ entity RecipeIngredient {
 deployment {
   deploymentType docker-compose
   appsFolders [gateway, products, groceries, recipes]
-  dockerRepositoryName "navareth"
+  dockerRepositoryName "fridgy"
 }
 
 // will be created under 'kubernetes' folder
 deployment {
   deploymentType kubernetes
   appsFolders [gateway, products, groceries, recipes]
-  dockerRepositoryName "navareth"
+  dockerRepositoryName "fridgy"
+  kubernetesNamespace fridgy
+  monitoring prometheus
 }
