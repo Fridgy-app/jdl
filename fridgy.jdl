@@ -47,42 +47,10 @@ application {
     prodDatabaseType postgresql
     cacheProvider hazelcast
     buildTool gradle
-    serverPort 8082
+    serverPort 8081
     skipUserManagement true
   }
-  entities Product, ProductCategory, ProductUnit
-}
-
-application {
-  config {
-    baseName groceries
-    applicationType microservice
-    packageName me.rasztabiga.fridgy.groceries
-    serviceDiscoveryType eureka
-    authenticationType oauth2
-    prodDatabaseType postgresql
-    cacheProvider hazelcast
-    buildTool gradle
-    serverPort 8083
-    skipUserManagement true
-  }
-  entities GroceryItem
-}
-
-application {
-  config {
-    baseName recipes
-    applicationType microservice
-    packageName me.rasztabiga.fridgy.recipes
-    serviceDiscoveryType eureka
-    authenticationType oauth2
-    prodDatabaseType postgresql
-    cacheProvider hazelcast
-    buildTool gradle
-    serverPort 8084
-    skipUserManagement true
-  }
-  entities Recipe, RecipeIngredient
+  entities Product, ProductCategory, ProductUnit, GroceryItem, Recipe, RecipeIngredient
 }
 
 /* Entities for Products Microservice */
@@ -99,41 +67,60 @@ entity ProductUnit {
     name String required unique
 }
 
-relationship OneToMany {
-   ProductCategory{product} to Product{productCategory(name)}
-   ProductUnit{product} to Product{productUnit(name)}
-}
-
-service Product, ProductCategory, ProductUnit with serviceClass
-paginate Product with pagination
-microservice Product, ProductCategory, ProductUnit with products
-
-/* Entities for Groceries Microservice */
 entity GroceryItem {
-
+	quantity Double
+    description String
 }
 
-/* Entities for Recipes Microservice */
-entity Recipe {
+relationship ManyToOne {
+	GroceryItem{user(login)} to User
+	GroceryItem{product} to Product
+	GroceryItem{unit} to ProductUnit
+}
 
+relationship OneToMany {
+	ProductCategory{product} to Product{productCategory}
+}
+
+relationship ManyToMany {
+	Product{productUnit} to ProductUnit{product}
+}
+
+entity Recipe {
+	name String required
+    instructionsBody String required
 }
 
 entity RecipeIngredient {
-
+	quantity Double
 }
+
+relationship ManyToOne {
+    RecipeIngredient{product} to Product
+    RecipeIngredient{productUnit} to ProductUnit
+}
+
+relationship OneToMany {
+	Recipe{recipeIngredient} to RecipeIngredient{recipe}
+}
+
+service Product, ProductCategory, ProductUnit, GroceryItem, Recipe, RecipeIngredient with serviceClass
+paginate Product, GroceryItem with infinite-scroll
+paginate Recipe with pagination
+microservice Product, ProductCategory, ProductUnit, GroceryItem, Recipe, RecipeIngredient with products
 
 // will be created under 'docker-compose' folder
 deployment {
-  deploymentType docker-compose
-  appsFolders [gateway, products, groceries, recipes]
-  dockerRepositoryName "fridgy"
+	deploymentType docker-compose
+	appsFolders [gateway, products]
+	dockerRepositoryName "fridgy"
 }
 
 // will be created under 'kubernetes' folder
 deployment {
-  deploymentType kubernetes
-  appsFolders [gateway, products, groceries, recipes]
-  dockerRepositoryName "fridgy"
-  kubernetesNamespace fridgy
+	deploymentType kubernetes
+	appsFolders [gateway, products]
+	dockerRepositoryName "fridgy"
+	kubernetesNamespace fridgy
   // monitoring prometheus
 }
