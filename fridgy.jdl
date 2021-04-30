@@ -69,7 +69,7 @@ entity ProductUnit {
 
 entity GroceryItem {
 	quantity Double
-    description String
+	description String
 }
 
 relationship ManyToOne {
@@ -88,20 +88,20 @@ relationship ManyToMany {
 
 entity Recipe {
 	name String required
-    instructionsBody String required
+	instructionsBody String required
 }
 
 entity RecipeIngredient {
 	quantity Double
 }
 
+relationship OneToMany {
+	Recipe{recipeIngredients} to RecipeIngredient{recipe}
+}
+
 relationship ManyToOne {
     RecipeIngredient{product} to Product
     RecipeIngredient{productUnit} to ProductUnit
-}
-
-relationship OneToMany {
-	Recipe{recipeIngredient} to RecipeIngredient{recipe}
 }
 
 service Product, ProductCategory, ProductUnit, GroceryItem, Recipe, RecipeIngredient with serviceClass
