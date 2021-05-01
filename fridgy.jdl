@@ -6,7 +6,7 @@ application {
     blueprints []
     buildTool gradle
     cacheProvider hazelcast
-    clientFramework vue
+    clientFramework angular
     clientPackageManager npm
     clientTheme darkly
     clientThemeVariant dark
@@ -104,6 +104,7 @@ relationship ManyToOne {
     RecipeIngredient{productUnit} to ProductUnit
 }
 
+dto Product, ProductCategory, ProductUnit, GroceryItem, Recipe, RecipeIngredient with mapstruct
 service Product, ProductCategory, ProductUnit, GroceryItem, Recipe, RecipeIngredient with serviceClass
 paginate Product, GroceryItem with infinite-scroll
 paginate Recipe with pagination
