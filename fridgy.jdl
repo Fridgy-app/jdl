@@ -3,7 +3,7 @@ application {
     applicationType gateway
     authenticationType oauth2
     baseName gateway
-    blueprints []
+    blueprints [kotlin]
     buildTool gradle
     cacheProvider hazelcast
     clientFramework angular
@@ -40,6 +40,7 @@ application {
 application {
   config {
     baseName products
+    blueprints [kotlin]
     applicationType microservice
     packageName me.rasztabiga.fridgy.products
     serviceDiscoveryType eureka
